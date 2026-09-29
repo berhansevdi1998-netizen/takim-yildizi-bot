@@ -145,17 +145,17 @@ def webhook():
     "callback_data": f"start:{order_id}"
 }]]
 
-send_message(
-    chat_id,
-    f"✅ <b>İş alındı!</b>\n"
-    f"👤 Personel: {worker_name}",
-    keyboard
-)
-        else:
-                send_message(
-                    chat_id,
-                    "⚠️ Bu iş daha önce başka bir personel tarafından alındı."
-                )
+            send_message(
+                chat_id,
+                f"✅ <b>İş alındı!</b>\n"
+                f"👤 Personel: {worker_name}",
+                keyboard
+            )
+            else:
+            send_message(
+                chat_id,
+                "⚠️ Bu iş daha önce başka bir personel tarafından alındı."
+            )
         elif data.startswith("start:"):
             order_id = int(data.split(":")[1])
 
