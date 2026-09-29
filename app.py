@@ -159,4 +159,35 @@ def webhook():
                 )
 
         elif data.startswith("start:"):
-            order
+                        order_id = int(data.split(":")[1])
+
+            if order_id not in orders:
+                return "ok"
+
+            order = orders[order_id]
+            order["status"] = "🚗 YOLA ÇIKTI"
+
+            keyboard = [[{
+                "text": "📦 KARGOYU TESLİM ETTİM",
+                "callback_data": f"delivered:{order_id}"
+            }]]
+
+            edit_message(
+                chat_id,
+                message_id,
+                order_text(order)
+            )
+
+            send_message(
+                chat_id,
+                f"🚗 <b>Personel yola çıktı!</b>\n"
+                f"👤 Personel: {order['worker']}",
+                keyboard
+            )
+
+    return "ok"
+
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
