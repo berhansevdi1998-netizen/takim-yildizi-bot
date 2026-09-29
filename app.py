@@ -127,23 +127,23 @@ def webhook():
 
             order = orders[order_id]
 
-            if order["worker"] is None:
-                worker = query["from"]
-                worker_name = worker.get("first_name", "Personel")
+                    if order["worker"] is None:
+            worker = query["from"]
+            worker_name = worker.get("first_name", "Personel")
 
-                order["worker"] = worker_name
-                order["status"] = "🟢 ALINDI"
+            order["worker"] = worker_name
+            order["status"] = "🟢 ALINDI"
 
-                edit_message(
-                    chat_id,
-                    message_id,
-                    order_text(order)
-                )
+            edit_message(
+                chat_id,
+                message_id,
+                order_text(order)
+            )
 
-                keyboard = [[{
-    "text": "🚗 YOLA ÇIKTIM",
-    "callback_data": f"start:{order_id}"
-}]]
+            keyboard = [[{
+                "text": "🚗 YOLA ÇIKTIM",
+                "callback_data": f"start:{order_id}"
+            }]]
 
             send_message(
                 chat_id,
@@ -151,12 +151,13 @@ def webhook():
                 f"👤 Personel: {worker_name}",
                 keyboard
             )
-                    else:
+        else:
             send_message(
                 chat_id,
                 "⚠️ Bu iş daha önce başka bir personel tarafından alındı."
-        )
-        elif data.startswith("start:"):
+            )
+
+    elif data.startswith("start:"):
             order_id = int(data.split(":")[1])
 
             if order_id not in orders:
