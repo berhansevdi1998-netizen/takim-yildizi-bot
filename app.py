@@ -151,9 +151,9 @@ def webhook():
                 f"👤 Personel: {worker_name}",
                 keyboard
             )
-        else:
-            send_message(
-                chat_id,
+            else:
+                send_message(
+                    chat_id,
                 "⚠️ Bu iş daha önce başka bir personel tarafından alındı."
             )
         elif data.startswith("start:"):
