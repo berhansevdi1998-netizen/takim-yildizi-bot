@@ -167,7 +167,7 @@ def webhook():
             order["status"] = "🚗 YOLA ÇIKTI"
 
             keyboard = [[{
-                "text": "📦 KARGOYU TESLİM ETTİM",
+                "text": "📦 KARGO TESLİM ALINDI",
                 "callback_data": f"delivered:{order_id}"
             }]]
 
@@ -183,7 +183,26 @@ def webhook():
                 f"👤 Personel: {order['worker']}",
                 keyboard
             )
+        elif data.startswith("delivered:"):
+            order_id = int(data.split(":")[1])
 
+            if order_id not in orders:
+                return "ok"
+
+            order = orders[order_id]
+            order["status"] = "📦 KARGO TESLİM ALINDI"
+
+            edit_message(
+                chat_id,
+                message_id,
+                order_text(order)
+            )
+
+            send_message(
+                chat_id,
+                f"📦 <b>Kargo teslim alındı!</b>\n"
+                f"👤 Personel: {order['worker']}"
+        )
     return "ok"
 
 
