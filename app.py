@@ -9,7 +9,7 @@ TELEGRAM_API = f"https://api.telegram.org/bot{TOKEN}"
 
 orders = {}
 next_order_id = 1
-
+waiting_for_price = {}
 
 def send_message(chat_id, text, keyboard=None):
     data = {
@@ -55,7 +55,8 @@ def order_text(order):
         f"📦 <b>İŞ #{order['id']:03d}</b>\n\n"
         f"🏢 📍 {order['description']}\n"
         f"📌 <b>Durum:</b> {order['status']}\n"
-        f"👤 <b>Personel:</b> {order['worker'] or 'Henüz alınmadı'}"
+        f"👤 <b>Personel:</b> {order['worker'] or 'Henüz alınmadı'}\n"
+f"💰 <b>Fiyat:</b> {order.get('price', 'Henüz girilmedi')} ₺"
     )
 
 
@@ -75,7 +76,21 @@ def webhook():
         message = update["message"]
         chat_id = message["chat"]["id"]
         text = message.get("text", "").strip()
+        if chat_id in waiting_for_price:
+            order_id = waiting_for_price[chat_id]
 
+            if order_id in orders:
+                order = orders[order_id]
+                order["price"] = text
+
+                send_message(
+                    chat_id,
+                    f"💰 <b>Fiyat kaydedildi:</b> {text} ₺\n"
+                    f"📦 İş #{order_id:03d}"
+                )
+
+            del waiting_for_price[chat_id]
+            return "ok"
         if not text:
             return "ok"
 
@@ -191,7 +206,13 @@ def webhook():
 
             order = orders[order_id]
             order["status"] = "📦 KARGO TESLİM ALINDI"
+            waiting_for_price[chat_id] = order_id
 
+            send_message(
+                chat_id,
+                "💰 <b>Kargo ücretini yazınız.</b>\n"
+                "Örnek: <b>1000</b>"
+            )
             edit_message(
                 chat_id,
                 message_id,
