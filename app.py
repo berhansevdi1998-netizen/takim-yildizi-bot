@@ -114,4 +114,46 @@ def webhook():
 
     # Buton işlemleri
     elif "callback_query" in update:
-        query =
+        query = update["callback_query"]
+        chat_id = query["message"]["chat"]["id"]
+        message_id = query["message"]["message_id"]
+        data = query.get("data", "")
+
+        if data.startswith("claim:"):
+            order_id = int(data.split(":")[1])
+
+            if order_id not in orders:
+                return "ok"
+
+            order = orders[order_id]
+
+            if order["worker"] is None:
+                worker = query["from"]
+                worker_name = worker.get("first_name", "Personel")
+
+                order["worker"] = worker_name
+                order["status"] = "🟢 ALINDI"
+
+                edit_message(
+                    chat_id,
+                    message_id,
+                    order_text(order)
+                )
+
+                send_message(
+                    chat_id,
+                    f"✅ <b>İş alındı!</b>\n"
+                    f"👤 Personel: {worker_name}"
+                )
+            else:
+                send_message(
+                    chat_id,
+                    "⚠️ Bu iş daha önce başka bir personel tarafından alındı."
+                )
+
+    return "ok"
+
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
