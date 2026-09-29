@@ -127,65 +127,36 @@ def webhook():
 
             order = orders[order_id]
 
-                    if order["worker"] is None:
-            worker = query["from"]
-            worker_name = worker.get("first_name", "Personel")
+            if order["worker"] is None:
+                worker = query["from"]
+                worker_name = worker.get("first_name", "Personel")
 
-            order["worker"] = worker_name
-            order["status"] = "🟢 ALINDI"
+                order["worker"] = worker_name
+                order["status"] = "🟢 ALINDI"
 
-            edit_message(
-                chat_id,
-                message_id,
-                order_text(order)
-            )
+                edit_message(
+                    chat_id,
+                    message_id,
+                    order_text(order)
+                )
 
-            keyboard = [[{
-                "text": "🚗 YOLA ÇIKTIM",
-                "callback_data": f"start:{order_id}"
-            }]]
+                keyboard = [[{
+                    "text": "🚗 YOLA ÇIKTIM",
+                    "callback_data": f"start:{order_id}"
+                }]]
 
-            send_message(
-                chat_id,
-                f"✅ <b>İş alındı!</b>\n"
-                f"👤 Personel: {worker_name}",
-                keyboard
-            )
-        else:
-            send_message(
-                chat_id,
-                "⚠️ Bu iş daha önce başka bir personel tarafından alındı."
-            )
+                send_message(
+                    chat_id,
+                    f"✅ <b>İş alındı!</b>\n"
+                    f"👤 Personel: {worker_name}",
+                    keyboard
+                )
 
-    elif data.startswith("start:"):
-            order_id = int(data.split(":")[1])
+            else:
+                send_message(
+                    chat_id,
+                    "⚠️ Bu iş daha önce başka bir personel tarafından alındı."
+                )
 
-            if order_id not in orders:
-                return "ok"
-
-            order = orders[order_id]
-            order["status"] = "🚗 YOLA ÇIKTI"
-
-            keyboard = [[{
-                "text": "📦 KARGOYU TESLİM ETTİM",
-                "callback_data": f"delivered:{order_id}"
-            }]]
-
-            edit_message(
-                chat_id,
-                message_id,
-                order_text(order)
-            )
-
-            send_message(
-                chat_id,
-                f"🚗 <b>Personel yola çıktı!</b>\n"
-                f"👤 Personel: {order['worker']}",
-                keyboard
-            )
-    return "ok"
-
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+        elif data.startswith("start:"):
+            order
