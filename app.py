@@ -140,11 +140,17 @@ def webhook():
                     order_text(order)
                 )
 
-                send_message(
-                    chat_id,
-                    f"✅ <b>İş alındı!</b>\n"
-                    f"👤 Personel: {worker_name}"
-                )
+                keyboard = [[{
+    "text": "🚗 YOLA ÇIKTIM",
+    "callback_data": f"start:{order_id}"
+}]]
+
+send_message(
+    chat_id,
+    f"✅ <b>İş alındı!</b>\n"
+    f"👤 Personel: {worker_name}",
+    keyboard
+)
             else:
                 send_message(
                     chat_id,
