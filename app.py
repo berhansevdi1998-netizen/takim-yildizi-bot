@@ -209,9 +209,8 @@ def webhook():
             waiting_for_price[chat_id] = order_id
 
             send_message(
-                chat_id,
-                "💰 <b>Kargo ücretini yazınız.</b>\n"
-                "Örnek: <b>1000</b>"
+    chat_id,
+    "💰 <b>Kargo ücretini yazınız.</b>"
             )
             edit_message(
                 chat_id,
