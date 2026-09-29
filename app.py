@@ -151,7 +151,7 @@ send_message(
     f"👤 Personel: {worker_name}",
     keyboard
 )
-            else:
+        else:
                 send_message(
                     chat_id,
                     "⚠️ Bu iş daha önce başka bir personel tarafından alındı."
